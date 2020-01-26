@@ -25,3 +25,4 @@ file_paths.xml
 *.bak
 /.vscode
 *.nuspec
+/src/UpgradeLog.htm
