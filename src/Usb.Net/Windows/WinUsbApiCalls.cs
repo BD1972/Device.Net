@@ -32,7 +32,7 @@ namespace Usb.Net.Windows
         public static extern bool WinUsb_GetDescriptor(SafeFileHandle InterfaceHandle, byte DescriptorType, byte Index, ushort LanguageID, out USB_DEVICE_DESCRIPTOR deviceDesc, uint BufferLength, out uint LengthTransfered);
 
         [DllImport("winusb.dll", SetLastError = true)]
-        public static extern bool WinUsb_GetDescriptor(SafeFileHandle InterfaceHandle, byte DescriptorType, byte Index, UInt16 LanguageID, byte[] Buffer, UInt32 BufferLength, out UInt32 LengthTransfered);
+        public static extern bool WinUsb_GetDescriptor(SafeFileHandle InterfaceHandle, byte DescriptorType, byte Index, ushort LanguageID, byte[] Buffer, uint BufferLength, out uint LengthTransfered);
 
         [DllImport("winusb.dll", SetLastError = true)]
         public static extern bool WinUsb_Free(SafeFileHandle InterfaceHandle);
@@ -62,10 +62,10 @@ namespace Usb.Net.Windows
         #region Public Methods
         public static string GetDescriptor(SafeFileHandle defaultInterfaceHandle, byte index, string errorMessage)
         {
-            var buffer = new byte[256];
-            var isSuccess = WinUsb_GetDescriptor(defaultInterfaceHandle, USB_STRING_DESCRIPTOR_TYPE, index, EnglishLanguageID, buffer, (uint)buffer.Length, out var transfered);
+            byte[] buffer = new byte[256];
+            bool isSuccess = WinUsb_GetDescriptor(defaultInterfaceHandle, USB_STRING_DESCRIPTOR_TYPE, index, EnglishLanguageID, buffer, (uint)buffer.Length, out uint transfered);
             WindowsDeviceBase.HandleError(isSuccess, errorMessage);
-            var descriptor = new string(Encoding.Unicode.GetChars(buffer, 2, (int)transfered));
+            string descriptor = new string(Encoding.Unicode.GetChars(buffer, 2, (int)transfered));
             return descriptor.Substring(0, descriptor.Length - 1);
         }
         #endregion
